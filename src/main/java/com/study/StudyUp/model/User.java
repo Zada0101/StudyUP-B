@@ -2,31 +2,28 @@ package com.study.StudyUp.model;
 
 import jakarta.persistence.*;
 
+//Entity → A structure in the database that stores data in rows & columns
 @Entity
-@Table(name = "users") // Optional but good practice to name table explicitly
+@Table(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-generate primary key
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 50) // Unique and required username
+    @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false, length = 255) // Store hashed password, not plain text
+    @Column(nullable = false)
     private String passwordHash;
 
-    // No-args constructor (required by JPA)
-    public User() {
-    }
+    public User() {}
 
-    // Constructor with fields
     public User(String username, String passwordHash) {
         this.username = username;
         this.passwordHash = passwordHash;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -49,14 +46,5 @@ public class User {
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
-    }
-
-    // Optional: toString() excluding password
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                '}';
     }
 }
