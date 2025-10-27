@@ -1,0 +1,14 @@
+<form th:action="@{/register}" th:object="${userRegistrationDto}" method="post" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div th:if="${successMessage}" class="success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert" th:text="${errorMessage}"></div>
+
+    <label>Username:</label>
+    <input type="text" th:field="*{username}" placeholder="Enter username" />
+    <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error"></div>
+
+    <label>Password:</label>
+    <input type="password" th:field="*{password}" placeholder="Enter password" />
+    <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error"></div>
+
+    <button type="submit">Register</button>
+</form>
