@@ -1,47 +1,64 @@
-import { useState, useRef, useEffect } from 'react'
-import client from '../api/axiosClient'
+import React, { useState } from "react";
+import { sendMessageToAI } from "../services/chatService";
 
+export default function Chat() {
+  const [userInput, setUserInput] = useState("");
+  const [messages, setMessages] = useState([]);
 
-export default function Chat(){
-const [messages, setMessages] = useState([])
-const [input, setInput] = useState('')
-const endRef = useRef()
+  const handleSend = async () => {
+    if (!userInput.trim()) return;
 
+    const userMsg = { sender: "You", text: userInput };
+    setMessages([...messages, userMsg]);
 
-useEffect(() => { endRef.current?.scrollIntoView({behavior:'smooth'}) }, [messages])
+    try {
+      const aiResponse = await sendMessageToAI(userInput);
+      setMessages((prev) => [
+        ...prev,
+        userMsg,
+        { sender: "AI", text: aiResponse.reply || "(no reply)" }
+      ]);
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        { sender: "System", text: "⚠️ Failed to contact server" }
+      ]);
+    }
 
+    setUserInput("");
+  };
 
-const send = async () => {
-const text = input.trim()
-if(!text) return
-const userMsg = { id: Date.now()+':u', role:'user', content: text }
-setMessages(m => [...m, userMsg])
-setInput('')
-try {
-const { data } = await client.post('/chat', { message: text })
-const aiMsg = { id: Date.now()+':a', role:'assistant', content: data.reply || String(data) }
-setMessages(m => [...m, aiMsg])
-} catch (e) {
-setMessages(m => [...m, { id: Date.now()+':e', role:'system', content: 'Error reaching chat API' }])
-}
-}
+  return (
+    <div style={{ padding: "2rem", maxWidth: "600px", margin: "auto" }}>
+      <h2>💬 StudyUp AI Chat</h2>
 
+      <div
+        style={{
+          border: "1px solid #ccc",
+          borderRadius: "8px",
+          padding: "1rem",
+          height: "300px",
+          overflowY: "auto",
+          marginBottom: "1rem"
+        }}
+      >
+        {messages.map((msg, index) => (
+          <div key={index}>
+            <strong>{msg.sender}: </strong> {msg.text}
+          </div>
+        ))}
+      </div>
 
-return (
-<div>
-<h1>AI Chat</h1>
-<div style={{border:'1px solid #ccc', padding:12, height:300, overflow:'auto'}}>
-{messages.map(m => (
-<div key={m.id} style={{marginBottom:8}}>
-<strong>{m.role}:</strong> {m.content}
-</div>
-))}
-<div ref={endRef} />
-</div>
-<div style={{marginTop:8}}>
-<input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==='Enter' && send()} style={{width:300}} />
-<button onClick={send} style={{marginLeft:8}}>Send</button>
-</div>
-</div>
-)
+      <input
+        type="text"
+        value={userInput}
+        onChange={(e) => setUserInput(e.target.value)}
+        placeholder="Type your message..."
+        style={{ width: "80%", padding: "0.5rem" }}
+      />
+      <button onClick={handleSend} style={{ padding: "0.5rem 1rem", marginLeft: "0.5rem" }}>
+        Send
+      </button>
+    </div>
+  );
 }

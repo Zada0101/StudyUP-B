@@ -1,16 +1,17 @@
+import axios from "axios";
+
+/**
+ * Sends a message to the backend ChatController
+ * and returns the AI's reply.
+ */
 export async function sendMessageToAI(message) {
   try {
-    const response = await fetch("http://localhost:9094/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ message })
+    const response = await axios.post("/api/chat", message, {
+      headers: { "Content-Type": "application/json" }
     });
-
-    return await response.json();
+    return response.data; // expects ChatResponse { reply: "..." }
   } catch (error) {
-    console.error("Error sending message to AI:", error);
+    console.error("Error sending message:", error);
     throw error;
   }
 }

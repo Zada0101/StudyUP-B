@@ -1,14 +1,21 @@
-package com.example.studyup.controller; // Controllers package
+package com.example.studyup.controller;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.web.bind.annotation.GetMapping; // Map GET
-import org.springframework.web.bind.annotation.RestController; // REST controller
-
-
-@RestController // Marks this class as a REST controller
+/**
+ * ✅ Simple controller to confirm the server is working.
+ */
+@RestController
 public class HelloController {
-    @GetMapping("/hello") // Basic test endpoint: GET /hello
-    public String hello() { // Returns plain text
-        return "Hello, StudyUp!"; // Useful for Week 1 verification
+
+    @GetMapping("/")
+    public String home() {
+        return "🚀 StudyUp backend is running successfully!";
+    }
+
+    @GetMapping("/api/health")
+    public String healthCheck() {
+        return "✅ API is healthy!";
     }
 }

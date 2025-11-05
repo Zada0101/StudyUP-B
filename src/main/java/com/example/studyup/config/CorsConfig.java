@@ -1,24 +1,23 @@
-package com.example.studyup.config; // Config package
+package com.example.studyup.config;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import org.springframework.context.annotation.Bean; // Expose beans
-import org.springframework.context.annotation.Configuration; // Config class
-import org.springframework.web.servlet.config.annotation.CorsRegistry; // CORS settings
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer; // MVC hook
-
-
-@Configuration // Tell Spring this is a config class
+@Configuration
 public class CorsConfig {
-    @Bean // Expose a WebMvcConfigurer bean to customize MVC
+
+    @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
-            public void addCorsMappings(CorsRegistry registry) { // Configure CORS
-                registry.addMapping("/**") // Apply to all paths
-                        .allowedOrigins("http://localhost:3000") // Allow React dev server
-                        .allowedMethods("GET","POST","PUT","DELETE","OPTIONS") // Common methods
-                        .allowedHeaders("*") // Allow any headers
-                        .allowCredentials(true); // Allow cookies/credentials
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**") // allow all endpoints
+                        .allowedOrigins("http://localhost:3000") // your React dev server
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
             }
         };
     }
