@@ -1,82 +1,72 @@
-package com.example.studyup.service; // Folder: com/example/studyUp/service
+package com.example.studyup.service;
 
-import com.example.studyup.dto.UserRegistrationDto;          // Registration data (username, password)
-import com.example.studyup.entity.User;                      // Database entity
-import com.example.studyup.repository.UserRepository;        // For DB operations
-import org.springframework.security.crypto.password.PasswordEncoder; // To hash passwords
-import org.springframework.stereotype.Service;               // Marks this as a Spring Service
-import org.springframework.transaction.annotation.Transactional; // Ensures DB consistency
+import com.example.studyup.dto.UserRegistrationDto;
+import com.example.studyup.model.AppUser;
+import com.example.studyup.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
- * ✅ This class implements authentication logic.
- * Handles user registration and login validation.
+ * ✅ Handles authentication logic (register + login)
  */
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    // Inject dependencies
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    /**
-     * ✅ Constructor-based dependency injection.
-     * Spring automatically provides these beans.
-     */
     public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     /**
-     * ✅ Register a new user
-     * Steps:
-     * 1️⃣ Check if username already exists
-     * 2️⃣ Encode (hash) the password
-     * 3️⃣ Save the new user to the database
+     * ✅ Registers a new user safely.
      */
     @Override
-    @Transactional // Ensures all DB operations in this method complete successfully or roll back
+    @Transactional
     public void register(UserRegistrationDto dto) {
-
-        // Step 1: Prevent duplicate usernames
+        // 1️⃣ Check for existing username
         if (userRepository.existsByUsername(dto.getUsername())) {
             throw new IllegalArgumentException("Username already exists!");
         }
 
-        // Step 2: Create a new User entity
-        User user = new User();
-        user.setUsername(dto.getUsername());
-        user.setPasswordHash(passwordEncoder.encode(dto.getPassword())); // Securely hash password
-        user.setEmail(dto.getEmail()); // Optional: add email if available
+        // 2️⃣ Optional: check for duplicate email
+        if (dto.getEmail() != null && userRepository.existsByEmail(dto.getEmail())) {
+            throw new IllegalArgumentException("Email already exists!");
+        }
 
-        // Step 3: Save user to database
+        // 3️⃣ Create new AppUser and encode password
+        AppUser user = AppUser.builder()
+                .username(dto.getUsername())
+                .email(dto.getEmail())
+                .passwordHash(passwordEncoder.encode(dto.getPassword()))
+                .role("USER")
+                .build();
+
+        // 4️⃣ Save to DB
         userRepository.save(user);
     }
 
     /**
-     * ✅ Login user
-     * Steps:
-     * 1️⃣ Look up user by username
-     * 2️⃣ Compare raw password to stored hash
-     * 3️⃣ Return a token if valid (simple placeholder now)
+     * ✅ Logs in user and returns a temporary dev token.
      */
     @Override
     public String login(String username, String password) {
-        // Step 1: Look up user by username
         var userOpt = userRepository.findByUsername(username);
         if (userOpt.isEmpty()) {
             throw new IllegalArgumentException("Invalid credentials");
         }
 
-        // Step 2: Get user object
-        var user = userOpt.get();
+        AppUser user = userOpt.get();
 
-        // Step 3: Compare passwords using encoder
+        // Compare raw password to encoded hash
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
             throw new IllegalArgumentException("Invalid credentials");
         }
 
-        // Step 4: Return a simple token (later replaced by JWT)
-        return "dev-token-" + username; // Just a fake token for now
+        // Return a simple dev token (replace later with JWT)
+        return "dev-token-" + username;
     }
 }
