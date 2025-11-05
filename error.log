@@ -1,0 +1,113 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< com.study:StudyUp >--------------------------
+[INFO] Building StudyUp 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.2.4:run (default-cli) > test-compile @ StudyUp >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ StudyUp ---
+[INFO] Copying 2 resources from src/main/resources to target/classes
+[INFO] Copying 2 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ StudyUp ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 33 source files with javac [debug release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ StudyUp ---
+[INFO] skip non existing resourceDirectory /Users/nurzada/Downloads/StudyUp/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ StudyUp ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 3 source files with javac [debug release 17] to target/test-classes
+[INFO] 
+[INFO] <<< spring-boot:3.2.4:run (default-cli) < test-compile @ StudyUp <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.2.4:run (default-cli) @ StudyUp ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.4)
+
+2025-10-29T08:17:12.019-07:00  INFO 33746 --- [           main] com.study.StudyUp.controller.StudyUpApplication     : Starting StudyUpApplication using Java 17.0.16 with PID 33746 (/Users/nurzada/Downloads/StudyUp/target/classes started by nurzada in /Users/nurzada/Downloads/StudyUp)
+2025-10-29T08:17:12.020-07:00 DEBUG 33746 --- [           main] com.study.StudyUp.controller.StudyUpApplication     : Running with Spring Boot v3.2.4, Spring v6.1.5
+2025-10-29T08:17:12.020-07:00  INFO 33746 --- [           main] com.study.StudyUp.controller.StudyUpApplication     : No active profile set, falling back to 1 default profile: "default"
+2025-10-29T08:17:12.278-07:00  INFO 33746 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-29T08:17:12.300-07:00  INFO 33746 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 19 ms. Found 1 JPA repository interface.
+2025-10-29T08:17:12.542-07:00  INFO 33746 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 9094 (http)
+2025-10-29T08:17:12.547-07:00  INFO 33746 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-10-29T08:17:12.547-07:00  INFO 33746 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-10-29T08:17:12.569-07:00  INFO 33746 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-10-29T08:17:12.570-07:00  INFO 33746 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 534 ms
+2025-10-29T08:17:12.586-07:00  INFO 33746 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-10-29T08:17:12.663-07:00  INFO 33746 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+2025-10-29T08:17:12.663-07:00  INFO 33746 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-10-29T08:17:12.668-07:00  INFO 33746 --- [           main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
+2025-10-29T08:17:12.715-07:00  INFO 33746 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-29T08:17:12.741-07:00  INFO 33746 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-10-29T08:17:12.758-07:00  INFO 33746 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-10-29T08:17:12.849-07:00  INFO 33746 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-29T08:17:12.871-07:00  WARN 33746 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-29T08:17:13.204-07:00  INFO 33746 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-29T08:17:13.222-07:00 DEBUG 33746 --- [           main] org.hibernate.SQL                        : alter table if exists users add column email varchar(255) not null
+Hibernate: alter table if exists users add column email varchar(255) not null
+2025-10-29T08:17:13.225-07:00 DEBUG 33746 --- [           main] org.hibernate.SQL                        : alter table if exists users drop constraint if exists UKr43af9ap4edm43mmtq01oddj6
+Hibernate: alter table if exists users drop constraint if exists UKr43af9ap4edm43mmtq01oddj6
+2025-10-29T08:17:13.225-07:00 DEBUG 33746 --- [           main] org.hibernate.SQL                        : alter table if exists users add constraint UKr43af9ap4edm43mmtq01oddj6 unique (username)
+Hibernate: alter table if exists users add constraint UKr43af9ap4edm43mmtq01oddj6 unique (username)
+2025-10-29T08:17:13.226-07:00 DEBUG 33746 --- [           main] org.hibernate.SQL                        : alter table if exists users drop constraint if exists UK6dotkott2kjsp8vw4d0m25fb7
+Hibernate: alter table if exists users drop constraint if exists UK6dotkott2kjsp8vw4d0m25fb7
+2025-10-29T08:17:13.226-07:00 DEBUG 33746 --- [           main] org.hibernate.SQL                        : alter table if exists users add constraint UK6dotkott2kjsp8vw4d0m25fb7 unique (email)
+Hibernate: alter table if exists users add constraint UK6dotkott2kjsp8vw4d0m25fb7 unique (email)
+2025-10-29T08:17:13.227-07:00  INFO 33746 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-29T08:17:13.366-07:00 DEBUG 33746 --- [           main] c.s.S.security.JwtAuthenticationFilter   : Filter 'jwtAuthenticationFilter' configured for use
+2025-10-29T08:17:13.372-07:00  WARN 33746 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'authController' defined in file [/Users/nurzada/Downloads/StudyUp/target/classes/com/study/StudyUp/controller/AuthController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'userServiceImpl' defined in file [/Users/nurzada/Downloads/StudyUp/target/classes/com/study/StudyUp/service/UserServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'securityConfig' defined in file [/Users/nurzada/Downloads/StudyUp/target/classes/com/study/StudyUp/security/SecurityConfig.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'userServiceImpl': Requested bean is currently in creation: Is there an unresolvable circular reference?
+2025-10-29T08:17:13.372-07:00  INFO 33746 --- [           main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-29T08:17:13.373-07:00  INFO 33746 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-10-29T08:17:13.374-07:00  INFO 33746 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-10-29T08:17:13.375-07:00  INFO 33746 --- [           main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2025-10-29T08:17:13.380-07:00  INFO 33746 --- [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-10-29T08:17:13.386-07:00 ERROR 33746 --- [           main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+The dependencies of some of the beans in the application context form a cycle:
+
+   authController defined in file [/Users/nurzada/Downloads/StudyUp/target/classes/com/study/StudyUp/controller/AuthController.class]
+┌─────┐
+|  userServiceImpl defined in file [/Users/nurzada/Downloads/StudyUp/target/classes/com/study/StudyUp/service/UserServiceImpl.class]
+↑     ↓
+|  securityConfig defined in file [/Users/nurzada/Downloads/StudyUp/target/classes/com/study/StudyUp/security/SecurityConfig.class]
+└─────┘
+
+
+Action:
+
+Relying upon circular references is discouraged and they are prohibited by default. Update your application to remove the dependency cycle between beans. As a last resort, it may be possible to break the cycle automatically by setting spring.main.allow-circular-references to true.
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.363 s
+[INFO] Finished at: 2025-10-29T08:17:13-07:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.2.4:run (default-cli) on project StudyUp: Process terminated with exit code: 1 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
