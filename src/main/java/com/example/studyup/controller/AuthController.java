@@ -1,60 +1,67 @@
 package com.example.studyup.controller;
 
-// ✅ The entity class for users
-import com.example.studyup.model.AppUser;
-
-// ✅ DTO (Data Transfer Object) for registration data
 import com.example.studyup.dto.UserRegistrationDto;
-
-// ✅ Business logic layer
-import com.example.studyup.service.UserService;
-
+import com.example.studyup.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * ✅ REST Controller for authentication actions (register, login).
- * Connected to frontend routes starting with /api/auth/*
- */
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
-@Validated
+@CrossOrigin(origins = "http://localhost:3000") // Allow frontend calls
 public class AuthController {
 
-    private final UserService userService;
+    private final AuthService authService;
 
-    /**
-     * ✅ Constructor-based dependency injection.
-     */
-    public AuthController(UserService userService) {
-        this.userService = userService;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
-    /**
-     * ✅ Register a new user.
-     *
-     * Example JSON:
-     * {
-     *   "username": "nurzada",
-     *   "email": "nurzada@example.com",
-     *   "password": "MySecurePass123"
-     * }
-     */
+    // ✅ REGISTER endpoint
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody @Validated UserRegistrationDto dto) {
+    public ResponseEntity<Map<String, Object>> register(@RequestBody UserRegistrationDto dto) {
         try {
-            // ✅ Use the new entity type AppUser
-            AppUser newUser = userService.registerUser(dto);
-
-            // ✅ Return the created user (without password)
-            return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
-
-        } catch (Exception e) {
+            var user = authService.register(dto);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(Map.of(
+                            "message", "✅ Registration successful!",
+                            "username", user.getUsername(),
+                            "email", user.getEmail()
+                    ));
+        } catch (IllegalArgumentException e) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body("Error: " + e.getMessage());
+                    .body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Unexpected error: " + e.getMessage()));
+        }
+    }
+
+    // ✅ LOGIN endpoint
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> credentials) {
+        try {
+            String username = credentials.get("username");
+            String password = credentials.get("password");
+
+            String token = authService.login(username, password);
+            return ResponseEntity.ok(Map.of(
+                    "message", "✅ Login successful!",
+                    "token", token
+            ));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Unexpected error: " + e.getMessage()));
         }
     }
 }
