@@ -3,70 +3,53 @@ package com.example.studyup.service;
 import com.example.studyup.dto.UserRegistrationDto;
 import com.example.studyup.model.AppUser;
 import com.example.studyup.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-/**
- * ✅ Handles authentication logic (register + login)
- */
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    /**
-     * ✅ Registers a new user safely.
-     */
     @Override
-    @Transactional
-    public void register(UserRegistrationDto dto) {
-        // 1️⃣ Check for existing username
+    public AppUser register(UserRegistrationDto dto) {
+
+        // Check if username already exists
         if (userRepository.existsByUsername(dto.getUsername())) {
-            throw new IllegalArgumentException("Username already exists!");
+            throw new IllegalArgumentException("Username already taken");
         }
 
-        // 2️⃣ Optional: check for duplicate email
-        if (dto.getEmail() != null && userRepository.existsByEmail(dto.getEmail())) {
-            throw new IllegalArgumentException("Email already exists!");
+        // Check if email already exists
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new IllegalArgumentException("Email already registered");
         }
 
-        // 3️⃣ Create new AppUser and encode password
+        // Create user with passwordHash
         AppUser user = AppUser.builder()
                 .username(dto.getUsername())
                 .email(dto.getEmail())
-                .passwordHash(passwordEncoder.encode(dto.getPassword()))
+                .passwordHash(passwordEncoder.encode(dto.getPassword())) // FIXED
                 .role("USER")
                 .build();
 
-        // 4️⃣ Save to DB
-        userRepository.save(user);
+        return userRepository.save(user); // Return full object
     }
 
-    /**
-     * ✅ Logs in user and returns a temporary dev token.
-     */
     @Override
     public String login(String username, String password) {
-        var userOpt = userRepository.findByUsername(username);
-        if (userOpt.isEmpty()) {
-            throw new IllegalArgumentException("Invalid credentials");
+
+        AppUser user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid username"));
+
+        // Compare password with hashed passwordHash
+        if (!passwordEncoder.matches(password, user.getPasswordHash())) {  // FIXED
+            throw new IllegalArgumentException("Invalid password");
         }
 
-        AppUser user = userOpt.get();
-
-        // Compare raw password to encoded hash
-        if (!passwordEncoder.matches(password, user.getPasswordHash())) {
-            throw new IllegalArgumentException("Invalid credentials");
-        }
-
-        // Return a simple dev token (replace later with JWT)
-        return "dev-token-" + username;
+        // Temporary token (replace later with JWT)
+        return "TOKEN_" + user.getId();
     }
 }

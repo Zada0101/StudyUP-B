@@ -1,22 +1,31 @@
 package com.example.studyup.controller;
 
-import com.example.studyup.service.ChatService;
+import com.example.studyup.service.OpenAIService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/chat")
+@RequiredArgsConstructor
 public class ChatController {
 
-    private final ChatService chatService;
+    private final OpenAIService openAIService;
 
-    // ✅ Constructor injection
-    public ChatController(ChatService chatService) {
-        this.chatService = chatService;
+    // POST /api/chat
+    @PostMapping
+    public Mono<Map<String, Object>> chatPost(@RequestBody Map<String, String> body) {
+        String message = body.get("message");
+        return openAIService.sendMessage(message)
+                .map(reply -> Map.of("reply", reply));
     }
 
-    // ✅ Simple synchronous endpoint
-    @PostMapping
-    public String chat(@RequestBody String message) {
-        return chatService.chatWithAI(message);
+    // GET /api/chat?message=hello
+    @GetMapping
+    public Mono<Map<String, Object>> chatGet(@RequestParam String message) {
+        return openAIService.sendMessage(message)
+                .map(reply -> Map.of("reply", reply));
     }
 }

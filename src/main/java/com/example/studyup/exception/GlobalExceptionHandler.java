@@ -1,44 +1,52 @@
-package com.example.studyup.exception; // Exception package
+package com.example.studyup.exception;
 
+import com.example.studyup.dto.ErrorResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.ServletWebRequest;
 
-import com.example.studyup.dto.ErrorResponse; // Error body
-import org.springframework.http.HttpStatus; // Status codes
-import org.springframework.http.ResponseEntity; // Response builder
-import org.springframework.web.bind.MethodArgumentNotValidException; // Validation errors
-import org.springframework.web.bind.annotation.ControllerAdvice; // Global handler
-import org.springframework.web.bind.annotation.ExceptionHandler; // Handle specific exceptions
-import org.springframework.web.context.request.ServletWebRequest; // Access request info
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-
-import java.util.LinkedHashMap; // Ordered map
-import java.util.stream.Collectors; // Collectors
-
-
-@ControllerAdvice // Apply to all controllers
+@ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex,
+                                                          ServletWebRequest req) {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class) // Bean validation failure
-    public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex, ServletWebRequest req) {
-        var fieldMap = ex.getBindingResult().getFieldErrors().stream() // For each field error
-                .collect(Collectors.toMap(f -> f.getField(), f -> f.getDefaultMessage(), (a,b)->a, LinkedHashMap::new)); // Build map
+        Map<String, String> fieldMap = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .collect(Collectors.toMap(
+                        f -> f.getField(),
+                        f -> f.getDefaultMessage(),
+                        (a, b) -> a,
+                        LinkedHashMap::new
+                ));
 
+        ErrorResponse err = new ErrorResponse();
+        err.setStatus(HttpStatus.BAD_REQUEST.value());
+        err.setError("Validation failed");
+        err.setPath(req.getRequest().getRequestURI());
+        err.setFieldErrors(fieldMap);
 
-        var err = new ErrorResponse(); // Our error shape
-        err.setStatus(HttpStatus.BAD_REQUEST.value()); // 400
-        err.setError("Validation failed"); // Message
-        err.setPath(req.getRequest().getRequestURI()); // Path
-        err.setFieldErrors(fieldMap); // Field messages
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err); // Return 400 JSON
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArg(IllegalArgumentException ex,
+                                                          ServletWebRequest req) {
 
-    @ExceptionHandler(IllegalArgumentException.class) // Our simple business errors
-    public ResponseEntity<ErrorResponse> handleIllegalArg(IllegalArgumentException ex, ServletWebRequest req) {
-        var err = new ErrorResponse();
-        err.setStatus(HttpStatus.BAD_REQUEST.value()); // 400 for now
-        err.setError(ex.getMessage()); // Show message
-        err.setPath(req.getRequest().getRequestURI()); // Path
+        ErrorResponse err = new ErrorResponse();
+        err.setStatus(HttpStatus.BAD_REQUEST.value());
+        err.setError(ex.getMessage());
+        err.setPath(req.getRequest().getRequestURI());
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 }
