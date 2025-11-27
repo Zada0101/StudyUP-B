@@ -11,7 +11,12 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(
+        origins = "http://localhost:3000",
+        allowCredentials = "true",
+        allowedHeaders = "*",
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS}
+)
 public class AuthController {
 
     private final AuthService authService;
@@ -20,19 +25,18 @@ public class AuthController {
         this.authService = authService;
     }
 
-    // REGISTER
+    // ⭐ REGISTER USER
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserRegistrationDto dto) {
         try {
             AppUser user = authService.register(dto);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(
-                    Map.of(
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of(
                             "message", "Registration successful",
                             "username", user.getUsername(),
                             "email", user.getEmail()
-                    )
-            );
+                    ));
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -40,22 +44,26 @@ public class AuthController {
         }
     }
 
-    // LOGIN
+    // ⭐ LOGIN USER
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
 
-        try {
-            String username = credentials.get("username");
-            String password = credentials.get("password");
+        String username = credentials.get("username");
+        String password = credentials.get("password");
 
+        if (username == null || password == null) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Username and password required"));
+        }
+
+        try {
             String token = authService.login(username, password);
 
-            return ResponseEntity.ok(
-                    Map.of(
-                            "message", "Login successful",
-                            "token", token
-                    )
-            );
+            return ResponseEntity.ok(Map.of(
+                    "message", "Login successful",
+                    "token", token,
+                    "username", username
+            ));
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
