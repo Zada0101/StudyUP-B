@@ -11,11 +11,15 @@ public class CorsConfig {
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
+
             @Override
             public void addCorsMappings(CorsRegistry registry) {
 
                 registry.addMapping("/**")
-                        .allowedOriginPatterns("*")   // FIX (not allowedOrigins("*"))
+                        .allowedOrigins(
+                                "http://localhost:5173",   // Vite
+                                "http://localhost:3000"    // CRA or fallback
+                        )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
