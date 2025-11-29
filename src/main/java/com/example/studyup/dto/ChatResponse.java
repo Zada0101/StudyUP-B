@@ -1,25 +1,23 @@
-package com.example.studyup.dto; // ✅ Lowercase package name for consistency
+package com.example.studyup.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * ✅ ChatResponse DTO
- * Represents a simple response returned from the ChatController.
+ * Represents the AI-generated reply and the session ID.
+ * Returned to the frontend every time the user sends a message.
+ *
+ * Example:
+ * {
+ *     "reply": "Sure, I can help!",
+ *     "sessionId": 12
+ * }
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChatResponse {
-
-    /** 💬 The AI-generated reply message */
     private String reply;
-
-    // ✅ Default constructor (needed for JSON serialization)
-    public ChatResponse() {
-    }
-
-    // ✅ Convenient constructor for direct initialization
-    public ChatResponse(String reply) {
-        this.reply = reply;
-    }
+    private Long sessionId;  // <-- REQUIRED for persistent chat
 }

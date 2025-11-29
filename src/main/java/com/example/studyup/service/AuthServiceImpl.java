@@ -13,43 +13,44 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     @Override
     public AppUser register(UserRegistrationDto dto) {
 
-        // Check if username already exists
-        if (userRepository.existsByUsername(dto.getUsername())) {
-            throw new IllegalArgumentException("Username already taken");
-        }
-
-        // Check if email already exists
+        // Validate email
         if (userRepository.existsByEmail(dto.getEmail())) {
-            throw new IllegalArgumentException("Email already registered");
+            throw new IllegalArgumentException("Email is already in use");
         }
 
-        // Create user with passwordHash
-        AppUser user = AppUser.builder()
-                .username(dto.getUsername())
-                .email(dto.getEmail())
-                .passwordHash(passwordEncoder.encode(dto.getPassword())) // FIXED
-                .role("USER")
-                .build();
+        // Validate username
+        if (userRepository.existsByUsername(dto.getUsername())) {
+            throw new IllegalArgumentException("Username is already taken");
+        }
 
-        return userRepository.save(user); // Return full object
+        // Create user
+        AppUser user = new AppUser();
+        user.setUsername(dto.getUsername());
+        user.setEmail(dto.getEmail());
+        user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
+        user.setRole("USER");
+
+        return userRepository.save(user);
     }
 
     @Override
-    public String login(String username, String password) {
+    public String login(String username, String rawPassword) {
 
+        // Load user
         AppUser user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid username"));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid username or password"));
 
-        // Compare password with hashed passwordHash
-        if (!passwordEncoder.matches(password, user.getPasswordHash())) {  // FIXED
-            throw new IllegalArgumentException("Invalid password");
+        // Validate password
+        if (!passwordEncoder.matches(rawPassword, user.getPasswordHash())) {
+            throw new IllegalArgumentException("Invalid username or password");
         }
 
-        // Temporary token (replace later with JWT)
-        return "TOKEN_" + user.getId();
+        // Generate JWT
+        return jwtService.generateToken(user.getUsername());
     }
 }

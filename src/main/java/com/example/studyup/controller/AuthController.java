@@ -12,10 +12,19 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(
-        origins = "http://localhost:3000",
+        origins = {
+                "http://localhost:5173",   // Vite (React)
+                "http://localhost:3000"    // Optional (if you ever use CRA)
+        },
         allowCredentials = "true",
         allowedHeaders = "*",
-        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS}
+        methods = {
+                RequestMethod.GET,
+                RequestMethod.POST,
+                RequestMethod.PUT,
+                RequestMethod.DELETE,
+                RequestMethod.OPTIONS
+        }
 )
 public class AuthController {
 

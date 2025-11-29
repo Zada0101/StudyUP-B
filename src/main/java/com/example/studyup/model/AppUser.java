@@ -1,27 +1,33 @@
 package com.example.studyup.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Data
+@Entity
+@Table(name = "users")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
-@Table(name = "users")
 public class AppUser {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(name = "password_hash", nullable = false)
-    private String passwordHash;
-
-    @Column(nullable = false, unique = true)
+    // Make email OPTIONAL (nullable = true, unique removed)
+    @Column(nullable = true)
     private String email;
 
-    private String role;
+    @JsonIgnore
+    @Column(nullable = false, name = "password_hash")
+    private String passwordHash;
+
+    @Column(nullable = false)
+    private String role = "USER";
 }
