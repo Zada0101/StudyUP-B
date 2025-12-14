@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+
+//@RestController tells Spring that this class is part of the BACKEND
+// and should receive requests from the frontend and send JSON responses back.
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(
