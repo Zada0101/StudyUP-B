@@ -1,23 +1,13 @@
 package com.example.studyup.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-/**
- * Represents the AI-generated reply and the session ID.
- * Returned to the frontend every time the user sends a message.
- *
- * Example:
- * {
- *     "reply": "Sure, I can help!",
- *     "sessionId": 12
- * }
- */
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 @AllArgsConstructor
 public class ChatResponse {
-    private String reply;
-    private Long sessionId;  // <-- REQUIRED for persistent chat
+    private String answer;
+    private Long sessionId;
 }
