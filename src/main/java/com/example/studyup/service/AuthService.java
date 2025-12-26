@@ -13,10 +13,8 @@ import com.example.studyup.model.AppUser;
 public interface AuthService {
 
     // This method is used to REGISTER a new user
-    //
     // Input:
     // UserRegistrationDto → contains username, email, password (plain text)
-    //
     // What implementation should do:
     // 1. Validate input
     // 2. Hash the password
